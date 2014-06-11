@@ -2,9 +2,9 @@ Package: mmadsenr
 Title: Research code by Mark E Madsen
 Description: Bits of code used by Mark E Madsen across research projects
 Version: 0.1
-Authors@R: c(person("Mark", "Madsen", role = c("aut", "cre"),
-    email = "mark@madsenlab.org"))
-Depends:
-    R (>= 3.0.3)
+Authors.R: c(person("Mark", "Madsen", role = c("aut", "cre"), email = "mark@madsenlab.org"))
+Depends: 
+ R (>= 3.0.3)
 License: Apache Public License 2.0 + file LICENSE
 LazyData: true
+Suggests: testthat
