@@ -1,4 +1,15 @@
-# functions for neutral models
+
+#' @title expected_k_pop
+#' @description
+#' Calculates the expected number of alleles at a locus in a population, evolving under
+#' a Wright-Fisher infinite-alleles drift model.  Employs the approximation from 
+#' Ewens 1972, Equation 4, and performs a simple numerical integration.  The approximation
+#' is good enough to match the value from Mathematica 9/10.  
+#' 
+#' @param n population size
+#' @param theta scaled innovation rate 
+#' @return expected_k
+#' @export
 
 expected_k_pop <- function(n, theta) {
   

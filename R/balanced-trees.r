@@ -1,5 +1,5 @@
 
-#' @title Order of balanced tree
+#' @title orderBalancedTree
 #' 
 #' @description 
 #' \code{orderBalancedTree} returns the order (number of vertices) of a balanced tree with breadth r and height h.  If the arguments

@@ -1,26 +1,20 @@
-## plotting functions
-library(ggplot2)
 
-
-
-## Function for arranging ggplots. use png(); arrange(p1, p2, ncol=1); dev.off() to save.
-## from http://gettinggeneticsdone.blogspot.com/2010/03/arrange-multiple-ggplot2-plots-in-same.html
-# Load the diamonds dataset
-# data(diamonds)
-# Create a histogram, assign to "plot1"
-# plot1 <- qplot(price,data=diamonds,binwidth=1000)
-# Create a scatterplot
-# plot2 <- qplot(carat,price,data=diamonds)
-#
-# Arrange and display the plots into a 2x1 grid
-# arrange_ggplot2(plot1,plot2,ncol=1)
-#
-
-
-library(grid)
-vp.layout <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
+#'@title arrange_ggplot2
+#'@description
+#'Arranges ggplot2 plot objects in a grid using code from Stephen Turner's website.
+#'from http://gettinggeneticsdone.blogspot.com/2010/03/arrange-multiple-ggplot2-plots-in-same.html
+#'use pdf(); arrange(p1,p2,ncol=1); dev.off() to save the plot to a file
+#'@param list list of plot objects
+#'@param ncol number of columns, can be null
+#'@param nrow number of rows, can be null
+#'@param as.table boolean, determines order in grid
+#'@export
 
 arrange_ggplot2 <- function(..., nrow=NULL, ncol=NULL, as.table=FALSE) {
+  library(ggplot2)
+  library(grid)
+  vp.layout <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
+  
   dots <- list(...)
   n <- length(dots)
   if(is.null(nrow) & is.null(ncol)) { nrow = floor(n/2) ; ncol = ceiling(n/nrow)}

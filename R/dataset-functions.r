@@ -1,5 +1,6 @@
-# utility functions for data sets
 
+#' @title random_split_dataset
+#' @description 
 #' Randomly splits a data frame into a training and test set, with a given fraction of rows in the 
 #' test data set.    
 #' 
