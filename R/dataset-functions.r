@@ -20,4 +20,38 @@ random_split_dataset <- function(df, test_fraction) {
   ret
 }
 
+#' @title get_data_path
+#' @description
+#' Utility function to help analysis be portable across dev environments and EC2 or
+#' StarCluster execution environments.  If passed a "basedir", it uses that as the 
+#' basis of a fully qualified path.  If not, it infers a basedir by first checking
+#' for environment variable "R_DATA_BASEDIR".  If this does not exist, it then checks
+#' for the existence of a variable "data_basedir" in the environment (perhaps from an .rprofile).
+#' If this doesn't exist, it uses getwd() as the basedir.  It then appends the "suffix" if 
+#' provided, and returns the canonical form of the directory path for the operating system.  
+#' 
+#' @param string basedir (defaults to NULL)
+#' @param string suffix (defaults to NULL)
+#' @param string filename
+#' @examples
+#' get_data_directory(suffix = "experiment") returns getwd()/experiment
+#' get_data_directory(basedir = "/home/foo", suffix = "experiment") returns /home/foo/experiment
+#' @export
+
+get_data_path <- function(basedir = "", suffix = "", filename = "") {
+  
+  if(basedir != "") {
+    p <- c(basedir)
+  } else if(Sys.getenv("R_DATA_BASEDIR") != "") {
+    p <- c(Sys.getenv("R_DATA_BASEDIR"))
+  } else if(exists("data_directory") == TRUE) {
+    p <- c(data_directory)
+  } else {
+    p <- c(getwd())
+  }
+  
+
+  final <- paste(p, suffix, filename, sep="/", collapse="")
+  final
+}
 
