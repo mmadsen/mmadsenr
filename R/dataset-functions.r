@@ -10,6 +10,8 @@
 #' @export
 
 random_split_dataset <- function(df, test_fraction) {
+  require("caret")
+  
   shuffled_df <- df[sample(nrow(df)),]
   indexes = sample(1:nrow(shuffled_df), size=test_fraction*nrow(shuffled_df))
   test = shuffled_df[indexes,]
@@ -17,4 +19,5 @@ random_split_dataset <- function(df, test_fraction) {
   ret <- list("train" = train, "test" = test)
   ret
 }
+
 

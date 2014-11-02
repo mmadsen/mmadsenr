@@ -32,13 +32,14 @@ do_binary_random_forest_roc <- function(df, class_field, fields_to_exclude, test
   rf.pr = predict(fit,type="prob",newdata=data$test)[,2]
   rf.pred = prediction(rf.pr, data$test[,class_field])
   rf.perf = performance(rf.pred, "tpr", "fpr")
+  rf.auc = performance(rf.pred, "auc")
   
   test_table <- table(data$test[,class_field], predict(fit, data$test[names(df_dropped)]))
   prediction <- sum(data$test[,class_field]==predict(fit, data$test[names(df_dropped)])) / nrow(data$test)
   error <- 1 - prediction
   
   ret <- list("fit"=fit, "prediction_rate" = prediction, "test_confusion" = test_table, 
-              "test_error" = error, "roc" = rf.perf, "roc_pred" = rf.pred)
+              "test_error" = error, "roc" = rf.perf, "roc_pred" = rf.pred, "roc_auc" = rf.auc@y.values[[1]])
   ret
 }
 
