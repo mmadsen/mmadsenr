@@ -108,16 +108,7 @@ multiclass_rf_replicated_testerror <- function(df, class_field, fields_to_exclud
   test_errors
 }
 
-#'@title plot_roc
-#'@description
-#'Plots an ROC curve with diagonal abline, given a ROCR performance object
-#'
-#'@param ROCR performance object
-#'@export
 
-plot_roc <- function(roc) {
-  require(ROCR)
-  plot(roc,col=2,lwd=2)
-  abline(a=0,b=1,lwd=2,lty=2,col="gray")
-}
+
+
 
