@@ -81,32 +81,7 @@ do_multiclass_random_forest <- function(df, class_field, fields_to_exclude, test
   ret
 }
 
-#' @title multiclass_rf_replicated_testerror
-#' @description
-#' Performs a multiclass random forest analysis with M replicates of the entire analysis, including independent selections of 
-#' train and test data from the underlying DF, and reports a vector of prediction accuracy values (1 - test error).    
-#' 
-#' @param data frame input data
-#' @param column to use as class labels
-#' @param vector fields to exclude from the random forest classifier.  should NOT include the class label field.
-#' @param number fraction of the data frame to sample for out-of-sample test data
-#' @param number number of trees to have the random forest classifier fit
-#' @param number minimum node size for the decision trees
-#' @param number number of variables to sample for each random tree
-#' @param number replicates of the analysis to be performed
-#' @return vector set of prediction accuracy values
-#' @export
-#'
-#'
-multiclass_rf_replicated_testerror <- function(df, class_field, fields_to_exclude, test_fraction = 0.2, numtrees = 500, 
-                                       node_size = 1, variables_to_sample = 3, replicates = 100) {
-  test_errors <- numeric(replicates)
-  for( i in 1:replicates ) {
-    m <- do_multiclass_random_forest(df, class_field, fields_to_exclude, test_fraction, numtrees, node_size, variables_to_sample)
-    test_errors[i] <- m$test_error
-  }
-  test_errors
-}
+
 
 
 

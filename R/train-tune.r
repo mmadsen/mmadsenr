@@ -90,6 +90,50 @@ plot_multiple_roc <- function(...) {
 
 
 
+#' @title train_randomforest
+#' @description
+#' Using the training and tuning function from the caret library, tune a random forest 
+#' model on the training fraction of a data frame, after excluding a set of columns.  
+#' Tuning occurs given the control and tuning grid objects passed, and the final fitted
+#' object is returned along with the elapsed time, training and test data sets in a list. 
+#' 
+#'  @param data.frame the full data set, without splitting into train/test
+#'  @param num the fraction of the data to use for training
+#'  @param object A tuning grid object of the type used by the caret library (in this case a vector of mtry values)
+#'  @param object A training control object of the type used by the caret library
+#'  @param character A vector of the names of columns to exclude from the analysis
+#'  @return list A list with the fitted result, the training and test data sets, and the elapsed time
+#'  @export 
+
+train_randomforest <- function(df, training_fraction, tuning_grid, training_control, exclude) {
+  retval <- list()
+  df_excluded_fields <- df[,!(names(df) %in% exclude)]
+  
+  nonTestIndex <- createDataPartition(df_excluded_fields$two_class_label, p = training_fraction,
+                                      list = FALSE,
+                                      times = 1)
+  
+  df_train <- df_excluded_fields[ nonTestIndex,]
+  df_test  <- df_excluded_fields[-nonTestIndex,]
+  
+  start_time <- proc.time()[["elapsed"]]
+  
+  fit <- train(two_class_label ~ ., data = df_train,
+               method="rf",
+               verbose=FALSE,
+               trControl = training_control,
+               tuneGrid = tuning_grid)
+  
+  end_time <- proc.time()[["elapsed"]]
+  sampled_training_minutes <- (end_time - start_time) / 60
+  
+  retval <- list("test_data" = df_test, "train_data" = df_train, "tunedmodel" = fit, "elapsed" = sampled_training_minutes)
+  
+  retval
+}
+
+
+
 
 
 
