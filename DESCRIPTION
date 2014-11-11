@@ -13,5 +13,5 @@ LazyData: true
 Suggests:
     testthat
 Imports:
-    caret, randomForest, doMC, ROCR
+    caret, randomForest, doMC, ROCR, e1071
     
