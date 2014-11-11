@@ -3,12 +3,12 @@
 \alias{plot_roc}
 \title{plot_roc}
 \usage{
-plot_roc(roc)
+plot_roc(roc_obj)
 }
 \arguments{
-\item{ROCR}{performance object}
+\item{list}{Output object from calculate_roc_binary_classifier()}
 }
 \description{
-Plots an ROC curve with diagonal abline, given a ROCR performance object
+Plots a single ROC curve with diagonal abline, given output objects from calculate_roc_binary_classifier()
 }
 
