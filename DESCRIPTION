@@ -12,3 +12,6 @@ License: Apache Public License 2.0 + file LICENSE
 LazyData: true
 Suggests:
     testthat
+Depends:
+    caret, randomForest, doMC, ROCR
+    
