@@ -56,6 +56,7 @@ plot_roc <- function(roc_obj) {
 #' Plots multiple ROC curves with diagonal abline, given multiple output objects from calculate_roc_binary_classifier()
 #' 
 #' @param multiple Output objects from calculate_roc_binary_classifier()
+#' @return ggplot2 plot object
 #' @export
  
 plot_multiple_roc <- function(...) {
@@ -64,7 +65,25 @@ plot_multiple_roc <- function(...) {
   require(ggthemes)
   
   input_list <- list(...)
-  
+  plot_multiple_roc_impl(input_list)
+}
+
+#' @title plot_multiple_roc_from_list
+#' @description
+#' Plots multiple ROC curves with diagonal abline, given a list of output objects from calculate_roc_binary_classifier().  
+#' Alternate wrapper for the function given that sometimes we'll already have a list of objects, say from a long-running
+#' analysis, and not be passing in individual objects.  
+#' 
+#' @param multiple Output objects from calculate_roc_binary_classifier()
+#' @return ggplot2 plot object
+#' @export
+
+plot_multiple_roc_from_list <- function(input_list) {
+  plot_multiple_roc_impl(input_list)
+}
+
+# not exported, internal function
+plot_multiple_roc_impl <- function (input_list) {
   plot_df <- data.frame(t(rep(NA,3)))
   names(plot_df) <- c("x","y","curve_label")
   
@@ -81,14 +100,12 @@ plot_multiple_roc <- function(...) {
   
   
   rocr.plot <- ggplot(data=plot_df, aes(x=x, y=y, color=curve_label), ) + geom_path(size=1) 
-  rocr.plot <- rocr.plot + coord_fixed() + labs(color="ROC Analysis")
+  rocr.plot <- rocr.plot + coord_fixed() + labs(color="ROC Comparison")
   rocr.plot <- rocr.plot + xlab("False Positive Rate") + ylab("True Positive Rate") 
   rocr.plot <- rocr.plot + geom_abline(intercept = 0, slope = 1, color="grey")
   rocr.plot <- rocr.plot + theme_pander()
   rocr.plot
 }
-
-
 
 #' @title train_randomforest
 #' @description
@@ -133,7 +150,67 @@ train_randomforest <- function(df, training_fraction, tuning_grid, training_cont
 }
 
 
+#' @title train_gbm_classifier
+#' @description
+#' Using the training and tuning function from the caret library, tune a random forest 
+#' model on the training fraction of a data frame, after excluding a set of columns.  
+#' Tuning occurs given the control and tuning grid objects passed, and the final fitted
+#' object is returned along with the elapsed time, training and test data sets in a list. 
+#' 
+#'  @param data.frame the full data set, without splitting into train/test
+#'  @param num the fraction of the data to use for training
+#'  #@param object A tuning grid object of the type used by the caret library (in this case a vector of mtry values)
+#'  #@param object A training control object of the type used by the caret library
+#'  @param character A vector of the names of columns to exclude from the analysis
+#'  @return list A list with the fitted result, the training and test data sets, and the elapsed time
+#'  @export 
 
+train_gbm_classifier <- function(df, training_fraction, exclude) {
+  retval <- list()
+  df_excluded_fields <- df[,!(names(df) %in% exclude)]
+  
+  nonTestIndex <- createDataPartition(df_excluded_fields$two_class_label, p = training_fraction,
+                                      list = FALSE,
+                                      times = 1)
+  
+  df_train <- df_excluded_fields[ nonTestIndex,]
+  df_test  <- df_excluded_fields[-nonTestIndex,]
+  
+  start_time <- proc.time()[["elapsed"]]
+  
+  fit <- train(two_class_label ~ ., data = df_train,
+               method="gbm",
+               verbose=FALSE)
+  
+  end_time <- proc.time()[["elapsed"]]
+  sampled_training_minutes <- (end_time - start_time) / 60
+  
+  retval <- list("test_data" = df_test, "train_data" = df_train, "tunedmodel" = fit, "elapsed" = sampled_training_minutes)
+  
+  retval
+}
+
+#' @title get_sorted_variable_importance
+#' @description 
+#' Given a fitted model object from caret's train() method, this utility method
+#' produces a properly sorted data frame with the predictor names in a column
+#' rather than as row.names, renames the columns for use in publications, and sorts
+#' by importance value in descending order.  The resulting data frame produces a 
+#' good table in pander() and other methods.  
+#' 
+#' @param model Fitted and tuned caret model object
+#' @return data.frame Sorted and rectified variable importance table
+#' @export
+
+
+get_sorted_variable_importance <- function(model) {
+  require(dplyr)
+  varimp <- varImp(model)
+  varimp_df <- varimp[["importance"]]
+  varimp_df$Predictor <- row.names(varimp_df)
+  names(varimp_df)[names(varimp_df)=="Overall"] <- "Importance"
+  arrange(varimp_df, desc(Importance))
+}
 
 
 

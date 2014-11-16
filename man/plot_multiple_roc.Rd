@@ -8,6 +8,9 @@ plot_multiple_roc(...)
 \arguments{
 \item{multiple}{Output objects from calculate_roc_binary_classifier()}
 }
+\value{
+ggplot2 plot object
+}
 \description{
 Plots multiple ROC curves with diagonal abline, given multiple output objects from calculate_roc_binary_classifier()
 }
