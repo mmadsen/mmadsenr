@@ -212,6 +212,35 @@ get_sorted_variable_importance <- function(model) {
   arrange(varimp_df, desc(Importance))
 }
 
+#' @title get_parsed_binary_confusion_matrix_stats
+#' @description
+#' Helper function which takes a caret package confusionMatrix object, created by 
+#' the confusionMatrix() function, and produces a single-row data frame with common variables
+#' parsed from the object.  These include the overall misclassification rate (1-accuracy), accuracy, 
+#' Cohen's kappa, ppv and npv, sensitivity and specificity, and a field which indicates the "positive" 
+#' label for those stats which treat one label as a "positive identification".  
+#' 
+#' @param confusionMatrix Caret package confusionMatrix object, produced typically with test data
+#' @return data.frame
+#' @export
+
+get_parsed_binary_confusion_matrix_stats <- function(cm) {
+  total_n <- cm$table[[1]] + cm$table[[2]] + cm$table[[3]] + cm$table[[4]]
+  misclassification_rate <- (cm$table[[2]] + cm$table[[3]]) / total_n
+  
+  stats <- list("misclassification_rate" = misclassification_rate, 
+                "accuracy" = cm$overall[["Accuracy"]],
+                "kappa" = cm$overall[["Kappa"]],
+                "ppv" = cm$byClass[["Pos Pred Value"]],
+                "npv" = cm$byClass[["Neg Pred Value"]],
+                "sensitivity" = cm$byClass[["Sensitivity"]],
+                "specificity" = cm$byClass[["Specificity"]],
+                "positive_label"= cm$positive)
+  
+  as.data.frame(stats)
+}
+
+
 
 
 
