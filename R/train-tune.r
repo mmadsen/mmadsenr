@@ -159,26 +159,27 @@ train_randomforest <- function(df, training_fraction, tuning_grid, training_cont
 #' 
 #'  @param data.frame the full data set, without splitting into train/test
 #'  @param num the fraction of the data to use for training
-#'  #@param object A tuning grid object of the type used by the caret library (in this case a vector of mtry values)
-#'  #@param object A training control object of the type used by the caret library
+#'  @param character the name of the column which contains true class labels
 #'  @param character A vector of the names of columns to exclude from the analysis
 #'  @return list A list with the fitted result, the training and test data sets, and the elapsed time
 #'  @export 
 
-train_gbm_classifier <- function(df, training_fraction, exclude) {
+train_gbm_classifier <- function(df, training_fraction, class_field, exclude) {
   retval <- list()
   df_excluded_fields <- df[,!(names(df) %in% exclude)]
   
-  nonTestIndex <- createDataPartition(df_excluded_fields$two_class_label, p = training_fraction,
+  nonTestIndex <- createDataPartition(df_excluded_fields[[class_field]], p = training_fraction,
                                       list = FALSE,
                                       times = 1)
   
   df_train <- df_excluded_fields[ nonTestIndex,]
   df_test  <- df_excluded_fields[-nonTestIndex,]
   
+  form <- as.formula(paste(class_field, "~", ".", sep = " "))
+  
   start_time <- proc.time()[["elapsed"]]
   
-  fit <- train(two_class_label ~ ., data = df_train,
+  fit <- train(form, data = df_train,
                method="gbm",
                verbose=FALSE)
   
