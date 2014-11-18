@@ -33,15 +33,20 @@ random_split_dataset <- function(df, test_fraction) {
 #' @param string basedir (defaults to NULL)
 #' @param string suffix (defaults to NULL)
 #' @param string filename
+#' @param args  List of command line arguments (to be processed by commandArgs())
 #' @examples
-#' get_data_directory(suffix = "experiment") returns getwd()/experiment
-#' get_data_directory(basedir = "/home/foo", suffix = "experiment") returns /home/foo/experiment
+#' get_data_path(suffix = "experiment", filename = "foo.r") returns {basedir}experiment/foo.r where {basedir} is the current working directory or the value of the "data_directory" variable.
+#' get_data_path(basedir = "/home/foo", suffix = "experiment", filename = "foo.r") returns /home/foo/experiment/foo.r
+#' get_data_path(filename = "foo.r", args = commandArgs(trailingOnly = TRUE)) takes the basedir from the command line as the first argument
+#' 
 #' @export
 
-get_data_path <- function(basedir = "", suffix = "", filename = "") {
+get_data_path <- function(basedir = "", suffix = "", filename = "", args = "") {
   
   if(basedir != "") {
     p <- c(basedir)
+  } else if(args != "") {
+    p <- args[1]  
   } else if(Sys.getenv("R_DATA_BASEDIR") != "") {
     p <- c(Sys.getenv("R_DATA_BASEDIR"))
   } else if(exists("data_directory") == TRUE) {

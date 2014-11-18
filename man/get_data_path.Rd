@@ -3,9 +3,11 @@
 \alias{get_data_path}
 \title{get_data_path}
 \usage{
-get_data_path(basedir = "", suffix = "", filename = "")
+get_data_path(basedir = "", suffix = "", filename = "", args = "")
 }
 \arguments{
+\item{args}{List of command line arguments (to be processed by commandArgs())}
+
 \item{string}{basedir (defaults to NULL)}
 
 \item{string}{suffix (defaults to NULL)}
@@ -22,7 +24,8 @@ If this doesn't exist, it uses getwd() as the basedir.  It then appends the "suf
 provided, and returns the canonical form of the directory path for the operating system.
 }
 \examples{
-get_data_directory(suffix = "experiment") returns getwd()/experiment
-get_data_directory(basedir = "/home/foo", suffix = "experiment") returns /home/foo/experiment
+get_data_path(suffix = "experiment", filename = "foo.r") returns {basedir}experiment/foo.r where {basedir} is the current working directory or the value of the "data_directory" variable.
+get_data_path(basedir = "/home/foo", suffix = "experiment", filename = "foo.r") returns /home/foo/experiment/foo.r
+get_data_path(filename = "foo.r", args = commandArgs(trailingOnly = TRUE)) takes the basedir from the command line as the first argument
 }
 

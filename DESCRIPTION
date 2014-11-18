@@ -1,7 +1,7 @@
 Package: mmadsenr
 Title: Research code by Mark E Madsen
 Description: Bits of code used by Mark E Madsen across research projects
-Version: 0.2
+Version: 0.3
 Authors.R: c(person("Mark", "Madsen", role = c("aut", "cre"), email =
     "mark@madsenlab.org"))
 Author: Mark E Madsen <mark@madsenlab.org>
