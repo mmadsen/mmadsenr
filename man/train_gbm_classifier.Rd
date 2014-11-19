@@ -3,7 +3,8 @@
 \alias{train_gbm_classifier}
 \title{train_gbm_classifier}
 \usage{
-train_gbm_classifier(df, training_fraction, class_field, exclude)
+train_gbm_classifier(df, training_fraction, class_field, tuning_grid,
+  training_control, exclude, verbose = FALSE)
 }
 \arguments{
 \item{data.frame}{the full data set, without splitting into train/test}
@@ -11,6 +12,10 @@ train_gbm_classifier(df, training_fraction, class_field, exclude)
 \item{num}{the fraction of the data to use for training}
 
 \item{character}{the name of the column which contains true class labels}
+
+\item{object}{A tuning grid object of the type used by the caret library (in this case a vector of mtry values)}
+
+\item{object}{A training control object of the type used by the caret library}
 
 \item{character}{A vector of the names of columns to exclude from the analysis}
 }

@@ -3,8 +3,8 @@
 \alias{train_randomforest}
 \title{train_randomforest}
 \usage{
-train_randomforest(df, training_fraction, tuning_grid, training_control,
-  exclude)
+train_randomforest(df, training_fraction, class_field, tuning_grid,
+  training_control, exclude)
 }
 \arguments{
 \item{data.frame}{the full data set, without splitting into train/test}

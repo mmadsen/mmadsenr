@@ -122,7 +122,7 @@ plot_multiple_roc_impl <- function (input_list) {
 #'  @return list A list with the fitted result, the training and test data sets, and the elapsed time
 #'  @export 
 
-train_randomforest <- function(df, training_fraction, tuning_grid, training_control, exclude) {
+train_randomforest <- function(df, training_fraction, class_field, tuning_grid, training_control, exclude) {
   retval <- list()
   df_excluded_fields <- df[,!(names(df) %in% exclude)]
   
@@ -160,11 +160,13 @@ train_randomforest <- function(df, training_fraction, tuning_grid, training_cont
 #'  @param data.frame the full data set, without splitting into train/test
 #'  @param num the fraction of the data to use for training
 #'  @param character the name of the column which contains true class labels
+#'  @param object A tuning grid object of the type used by the caret library (in this case a vector of mtry values)
+#'  @param object A training control object of the type used by the caret library
 #'  @param character A vector of the names of columns to exclude from the analysis
 #'  @return list A list with the fitted result, the training and test data sets, and the elapsed time
 #'  @export 
 
-train_gbm_classifier <- function(df, training_fraction, class_field, exclude) {
+train_gbm_classifier <- function(df, training_fraction, class_field, tuning_grid, training_control, exclude, verbose = FALSE) {
   retval <- list()
   df_excluded_fields <- df[,!(names(df) %in% exclude)]
   
@@ -181,7 +183,9 @@ train_gbm_classifier <- function(df, training_fraction, class_field, exclude) {
   
   fit <- train(form, data = df_train,
                method="gbm",
-               verbose=FALSE)
+               trControl = training_control,
+               tuneGrid = tuning_grid,
+               verbose=verbose)
   
   end_time <- proc.time()[["elapsed"]]
   sampled_training_minutes <- (end_time - start_time) / 60
