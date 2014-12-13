@@ -23,9 +23,4 @@ for the existence of a variable "data_basedir" in the environment (perhaps from 
 If this doesn't exist, it uses getwd() as the basedir.  It then appends the "suffix" if
 provided, and returns the canonical form of the directory path for the operating system.
 }
-\examples{
-get_data_path(suffix = "experiment", filename = "foo.r") returns basedir/experiment/foo.r where basedir is the current working directory or the value of the "data_directory" variable.
-get_data_path(basedir = "/home/foo", suffix = "experiment", filename = "foo.r") returns /home/foo/experiment/foo.r
-get_data_path(filename = "foo.r", args = commandArgs(trailingOnly = TRUE)) takes the basedir from the command line as the first argument
-}
 
