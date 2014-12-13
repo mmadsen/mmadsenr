@@ -4,17 +4,20 @@
 \title{calculate_roc_binary_classifier}
 \usage{
 calculate_roc_binary_classifier(fit = NULL, test = NULL,
-  label_class = NULL, curve_title = NULL)
+  label_class = NULL, curve_title = NULL, label.order = NULL)
 }
 \arguments{
 \item{fit}{Tuned and fitting model from caret's train() function}
 
 \item{test}{Data frame representing test data}
 
-\item{label}{Column name representing the true label in the test set}
+\item{label_class}{Column name representing the true label in the test set}
+
+\item{curve_title}{String representing the legend and/or plot title for this ROC curve, used by
+\code{\link{plot_roc}}, \code{\link{plot_multiple_roc}} and \code{\link{plot_multiple_roc_from_list}}.}
 }
 \value{
-list List with a ROC object and AUC
+list List with a ROC object and AUC value
 }
 \description{
 Given a fitted binary classification from caret training and tuning, and a test set,

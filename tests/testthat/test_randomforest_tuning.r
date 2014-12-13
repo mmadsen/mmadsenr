@@ -16,11 +16,9 @@ test_that("tuning a random forest with caret works", {
   set.seed(seed_value)
   
   # tuning grid of parameters and tuning cross-validation parameters
-  fit_grid <- expand.grid(mtry=seq(from=2, to=12, by=4))
-  cv_num <- 4
+  fit_grid <- expand.grid(mtry=seq(from=2, to=12, by=6))
   fit_control <- trainControl(method="cv", 
-                              number=cv_num, 
-                              #repeats=cv_repeats, 
+                              number=4, 
                               allowParallel = TRUE,
                               ## Estimate class probabilities
                               classProbs = TRUE)
@@ -31,7 +29,7 @@ test_that("tuning a random forest with caret works", {
   
   exclude_columns <- c("simulation_run_id", "innovation_rate", "model_class_label", "sample_size", "ta_duration")
   
-  model <- train_randomforest(test_train, training_set_fraction, fit_grid, fit_control, exclude_columns)
+  model <- train_randomforest(test_train, training_set_fraction, "two_class_label", fit_grid, fit_control, exclude_columns)
   
   
   
@@ -58,13 +56,20 @@ test_that("tuning a gradient boosted model with caret works", {
   seed_value <- 23581321
   set.seed(seed_value)
   
+  gbm_grid <- expand.grid(.interaction.depth = 8,
+                          .n.trees = 200, 
+                          .shrinkage = 0.05)
+  
+  training_control <- trainControl(method="cv", 
+                                   number=4)
+  
   # Set up sampling of train and test data sets
   training_set_fraction <- 0.8
   test_set_fraction <- 1.0 - training_set_fraction
   
   exclude_columns <- c("simulation_run_id", "innovation_rate", "sample_size", "ta_duration")
   
-  model <- train_gbm_classifier(test_train, training_set_fraction, "model_class_label", exclude_columns)
+  model <- train_gbm_classifier(test_train, training_set_fraction, "model_class_label", gbm_grid, training_control, exclude_columns)
   
   observed <- length(model)
   expected <- 4

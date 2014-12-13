@@ -6,15 +6,17 @@ Authors.R: c(person("Mark", "Madsen", role = c("aut", "cre"), email =
     "mark@madsenlab.org"))
 Author: Mark E Madsen <mark@madsenlab.org>
 Maintainer: Mark E Madsen <mark@madsenlab.org>
-Depends:
+Depends: 
     R (>= 3.0.3)
 License: Apache Public License 2.0 + file LICENSE
 LazyData: true
-Suggests:
-    testthat
-Imports:
+Suggests: 
+    testthat,
+    knitr
+Imports: 
     caret,
     randomForest,
     doMC,
     ROCR,
     e1071
+VignetteBuilder: knitr

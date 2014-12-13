@@ -8,14 +8,16 @@
 #' 
 #' @param fit Tuned and fitting model from caret's train() function
 #' @param test Data frame representing test data
-#' @param label Column name representing the true label in the test set
-#' @return list List with a ROC object and AUC
+#' @param label_class Column name representing the true label in the test set
+#' @param curve_title String representing the legend and/or plot title for this ROC curve, used by 
+#' \code{\link{plot_roc}}, \code{\link{plot_multiple_roc}} and \code{\link{plot_multiple_roc_from_list}}.
+#' @return list List with a ROC object and AUC value
 #' @export
 
-calculate_roc_binary_classifier <- function(fit = NULL, test = NULL, label_class = NULL, curve_title = NULL ) {
+calculate_roc_binary_classifier <- function(fit = NULL, test = NULL, label_class = NULL, curve_title = NULL, label.order = NULL) {
   require(ROCR)
   rf.pr = predict(fit,type="prob",newdata=test)[,2]
-  rf.pred = prediction(rf.pr, test[,label_class])
+  rf.pred = prediction(rf.pr, test[,label_class], label.ordering = label.order)
   rf.perf = performance(rf.pred, "tpr", "fpr")
   rf.auc = performance(rf.pred, "auc")
   retval <- list("roc" = rf.perf, "auc" = rf.auc, "title" = curve_title)
@@ -126,7 +128,7 @@ train_randomforest <- function(df, training_fraction, class_field, tuning_grid, 
   retval <- list()
   df_excluded_fields <- df[,!(names(df) %in% exclude)]
   
-  nonTestIndex <- createDataPartition(df_excluded_fields$two_class_label, p = training_fraction,
+  nonTestIndex <- createDataPartition(df_excluded_fields[[class_field]], p = training_fraction,
                                       list = FALSE,
                                       times = 1)
   
