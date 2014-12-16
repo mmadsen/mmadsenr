@@ -61,7 +61,7 @@ vertical_dotchart <- function(df,
                               x_label = xlabel, 
                               y_var = yvar, 
                               y_label = "Experiment", 
-                              y_group_var = ygroup, 
+                              y_group_var = NULL, 
                               legend_title = "Experiment Group",
                               sort.by.xvar = TRUE, 
                               group.by.ygroup = TRUE) {
@@ -69,6 +69,11 @@ vertical_dotchart <- function(df,
   require(ggplot2)
   require(ggthemes)
 
+  # prevent a conflict if the user doesn't set the flag but leaves off a grouping variable
+  if(is.null(y_group_var)) {
+    group.by.ygroup = FALSE
+  }
+  
   if(sort.by.xvar == TRUE) {
       df$yvar_sorted <- reorder(df[[y_var]], df[[x_var]])
       plt <- ggplot(df, aes_string(x = x_var, y = "yvar_sorted")) 
@@ -79,7 +84,13 @@ vertical_dotchart <- function(df,
   plt <- plt + geom_segment(aes(yend = experiments), xend = 0, color = "grey50")
   plt <- plt + ylab(y_label)
   plt <- plt + xlab(x_label)
-  plt <- plt + geom_point(size = 3, aes(color = exp_group)) + labs(color = legend_title)
+  
+  if(!is.null(y_group_var)) {
+    plt <- plt + geom_point(size = 3, aes_string(color = y_group_var)) + labs(color = legend_title)
+  } else {
+    plt <- plt + geom_point(size = 3)
+  }
+
   plt <- plt + theme_pander()
   plt <- plt + theme(panel.grid.major.x = element_blank(),
                      panel.grid.minor.x = element_blank(),

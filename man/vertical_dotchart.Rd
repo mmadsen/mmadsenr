@@ -4,7 +4,7 @@
 \title{vertical_dotchart}
 \usage{
 vertical_dotchart(df, x_var = xvar, x_label = xlabel, y_var = yvar,
-  y_label = "Experiment", y_group_var = ygroup,
+  y_label = "Experiment", y_group_var = NULL,
   legend_title = "Experiment Group", sort.by.xvar = TRUE,
   group.by.ygroup = TRUE)
 }
