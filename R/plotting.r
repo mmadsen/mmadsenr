@@ -35,3 +35,66 @@ arrange_ggplot2 <- function(..., nrow=NULL, ncol=NULL, as.table=FALSE) {
     }
   }
 }
+
+#'@title vertical_dotchart
+#'@description
+#'Produces a vertical dot chart, with a metric variable giving the length of a horizontal 
+#'line segment and a dot colored by a grouping variable.  Each row in the data frame becomes a 
+#'row in the dotchart.  The y variable is a label for each row, and rows can be grouped
+#'by a grouping variable.  The plot can be sorted in descending order of the x metric variable,
+#'or grouped by the grouping variable and then sorted.   
+#'
+#'@param df Data frame to be plotted
+#'@param x_var Name of the metric variable to be plotted, as a string
+#'@param x_label Name of the metric variable as a plot legend string
+#'@param y_var Name of the categorical variable labeling each row in the data frame
+#'@param y_label Name of the categorical variable, as a plot legend string
+#'@param y_group_var Name of a categorical variable which groups the rows
+#'@param legend_title Title of the legend for groups, defaults to "Experiment Group"
+#'@param sort.by.xvar Boolean flag to sort rows by the metric variable, defaults to TRUE
+#'@param group.by.ygroup Boolean flag to sort groups of rows by the grouping variable, defaults to TRUE
+#'@return ggplot2 object
+#'@export
+
+vertical_dotchart <- function(df, 
+                              x_var = xvar, 
+                              x_label = xlabel, 
+                              y_var = yvar, 
+                              y_label = "Experiment", 
+                              y_group_var = ygroup, 
+                              legend_title = "Experiment Group",
+                              sort.by.xvar = TRUE, 
+                              group.by.ygroup = TRUE) {
+  
+  require(ggplot2)
+  require(ggthemes)
+
+  if(sort.by.xvar == TRUE) {
+      df$yvar_sorted <- reorder(df[[y_var]], df[[x_var]])
+      plt <- ggplot(df, aes_string(x = x_var, y = "yvar_sorted")) 
+    } else {
+      plt <- ggplot(df, aes_string(x = x_var, y = y_var))
+    }
+
+  plt <- plt + geom_segment(aes(yend = experiments), xend = 0, color = "grey50")
+  plt <- plt + ylab(y_label)
+  plt <- plt + xlab(x_label)
+  plt <- plt + geom_point(size = 3, aes(color = exp_group)) + labs(color = legend_title)
+  plt <- plt + theme_pander()
+  plt <- plt + theme(panel.grid.major.x = element_blank(),
+                     panel.grid.minor.x = element_blank(),
+                     strip.background = element_blank(), strip.text = element_blank())
+  if(group.by.ygroup == TRUE) {
+    form <- as.formula(paste(y_group_var, "~", ".", sep = " "))
+    plt <- plt + facet_grid(form, scales = "free_y", space = "free_y")
+  }
+  
+  plt
+}
+
+
+
+
+
+
+
