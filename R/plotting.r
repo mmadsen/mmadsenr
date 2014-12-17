@@ -81,13 +81,14 @@ vertical_dotchart <- function(df,
       plt <- ggplot(df, aes_string(x = x_var, y = y_var))
     }
 
-  plt <- plt + geom_segment(aes(yend = experiments), xend = 0, color = "grey50")
   plt <- plt + ylab(y_label)
   plt <- plt + xlab(x_label)
   
   if(!is.null(y_group_var)) {
+    plt <- plt + geom_segment(aes_string(yend = yvar_sorted), xend = 0, color = "grey50")
     plt <- plt + geom_point(size = 3, aes_string(color = y_group_var)) + labs(color = legend_title)
   } else {
+    plt <- plt + geom_segment(aes_string(yend = y_var), xend = 0, color = "grey50")
     plt <- plt + geom_point(size = 3)
   }
 
