@@ -105,9 +105,7 @@ vertical_dotchart <- function(df,
 }
 
 
-
-require(proto)
-
+library(proto)
 StatEllipse <- proto(ggplot2:::Stat,
 {
   required_aes <- c("x", "y")
@@ -121,7 +119,7 @@ StatEllipse <- proto(ggplot2:::Stat,
     dfn <- 2
     dfd <- length(data$x) - 1
     if (dfd < 3){
-      ellipse <- rbind(c(NA,NA))	
+      ellipse <- rbind(c(NA,NA))  
     } else {
       require(MASS)
       v <- cov.trob(cbind(data$x, data$y))
@@ -144,8 +142,8 @@ StatEllipse <- proto(ggplot2:::Stat,
 #' @description 
 #' ggplot2 confidence ellipse from https://raw.github.com/JoFrhwld/FAAV/master/r/stat-ellipse.R
 #' @export
-
 stat_ellipse <- function(mapping=NULL, data=NULL, geom="path", position="identity", ...) {
+  require(proto)
   StatEllipse$new(mapping=mapping, data=data, geom=geom, position=position, ...)
 }
 
