@@ -251,4 +251,13 @@ get_parsed_binary_confusion_matrix_stats <- function(cm) {
 
 
 
+calc_f1_impl <- function(cm) {
+  f1 <- 2 * ((cm$byClass[["Pos Pred Value"]] * cm$byClass[["Sensitivity"]]) / (cm$byClass[["Pos Pred Value"]] + cm$byClass[["Sensitivity"]]))
+  f1
+}
+
+
+
+
+
 
